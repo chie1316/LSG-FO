@@ -1,0 +1,54 @@
+<div class="container">
+
+<form [formGroup]="guestForm" (ngSubmit)="onFormSubmit(guestForm.value)">
+  <input formControlName="firstName" placeholder="First Name">
+  <input formControlName="middleName" placeholder="Middle Name">
+  <input formControlName="lastName" placeholder="Last Name">
+  <input formControlName="age" placeholder="Age">
+  <input formControlName="address" placeholder="Address">
+  <input formControlName="mobileNo" placeholder="Mobile No.">
+  <input formControlName="email" placeholder="Email">
+
+    <select formControlName="invitedById">
+      <option value="" selected="selected">Invited By</option>
+      <option value="297e3fca69626bd00169626c4fd30000">Aron Ciruela</option>
+  </select>
+
+   <button type="submit">Submit</button>
+</form>
+
+  <table class="table">
+    <tr class="row header">
+      <th class="tbl2">ID</th>
+      <th class="tbl2">Name</th>
+      <th class="tbl2">Age</th>
+      <th class="tbl2">Address</th>
+      <th class="tbl2">Mobile</th>
+      <th class="tbl2">Email</th>
+      <th class="tbl2">Invited By</th>
+      <th class="tbl2" colspan="2">Action</th>
+    </tr>
+
+    <tr *ngFor="let guest of allGuests.data">
+      <td class="tbl2">{{guest.id}}</td>
+      <td class="tbl2">{{guest.firstName}} {{guest.lastName}}</td>
+      <td class="tbl2">{{guest.age}}</td>
+      <td class="tbl2">{{guest.address}}</td>
+      <td class="tbl2">{{guest.mobileNo}}</td>
+      <td class="tbl2">{{guest.email}}</td>
+      <td class="tbl2">{{guest.invitedBy.name}}</td>
+      <td class="tbl2">
+        <button type="button"
+        (click)="loadGuestToEdit(guest.id)">
+          Edit
+        </button>
+      </td>
+      <td class="tbl2">
+        <button type="button"
+        (click)="removeGuest(guest.id)">
+          Remove
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>

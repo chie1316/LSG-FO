@@ -1,54 +1,119 @@
 <div class="container">
-
-<form [formGroup]="guestForm" (ngSubmit)="onFormSubmit(guestForm.value)">
-  <input formControlName="firstName" placeholder="First Name">
-  <input formControlName="middleName" placeholder="Middle Name">
-  <input formControlName="lastName" placeholder="Last Name">
-  <input formControlName="age" placeholder="Age">
-  <input formControlName="address" placeholder="Address">
-  <input formControlName="mobileNo" placeholder="Mobile No.">
-  <input formControlName="email" placeholder="Email">
-
-    <select formControlName="invitedById">
-      <option value="" selected="selected">Invited By</option>
-      <option value="297e3fca69626bd00169626c4fd30000">Aron Ciruela</option>
-  </select>
-
-   <button type="submit">Submit</button>
-</form>
-
-  <table class="table">
-    <tr class="row header">
-      <th class="tbl2">ID</th>
-      <th class="tbl2">Name</th>
-      <th class="tbl2">Age</th>
-      <th class="tbl2">Address</th>
-      <th class="tbl2">Mobile</th>
-      <th class="tbl2">Email</th>
-      <th class="tbl2">Invited By</th>
-      <th class="tbl2" colspan="2">Action</th>
+  <div class="matCardContainer">
+    <mat-card-header class="matCardHeader">
+      <mat-card-title>Add Guest</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="matContent">
+      <form [formGroup]="guestForm" fxFlex="100" fxLayout="row" (ngSubmit)="onFormSubmit(guestForm.value)">
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <input matInput formControlName="firstName" placeholder="First Name" autocomplete="off">
+          </mat-form-field>
+          <mat-error>
+            <span class="myNewDivHeight" *ngIf="!guestForm.get('firstName').value && guestForm.get('firstName').touched">Please enter your first name.</span>
+          </mat-error>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <input matInput formControlName="middleName" placeholder="Middle Name" autocomplete="off">
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <input matInput formControlName="lastName" placeholder="Last Name" autocomplete="off">
+          </mat-form-field>
+          <mat-error>
+            <span *ngIf="!guestForm.get('lastName').value && guestForm.get('lastName').touched">Please enter your last name.</span>
+          </mat-error>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <input matInput formControlName="age" placeholder="Age" autocomplete="off">
+          </mat-form-field>
+          <mat-error>
+            <div *ngIf="guestForm.get('age').errors && (guestForm.get('age').touched || guestForm.get('age').dirty)">
+              <span *ngIf="!guestForm.get('age').value">Please enter your age.</span>
+              <span *ngIf="guestForm.get('age').errors.pattern">Numbers only.</span>
+            </div>
+          </mat-error>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <input matInput formControlName="address" placeholder="Address" autocomplete="off">
+          </mat-form-field>
+          <mat-error>
+            <span *ngIf="!guestForm.get('address').value && guestForm.get('address').touched">Please enter your address.</span>
+          </mat-error>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <input matInput formControlName="mobileNo" placeholder="Mobile No." autocomplete="off">
+          </mat-form-field>
+          <mat-error>
+            <div *ngIf="guestForm.get('mobileNo').errors && (guestForm.get('mobileNo').touched || guestForm.get('mobileNo').dirty)">
+              <span *ngIf="guestForm.get('mobileNo').errors.pattern">Numbers only.</span>
+            </div>
+          </mat-error>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <input matInput formControlName="email" placeholder="Email" autocomplete="off">
+          </mat-form-field>
+          <mat-error>
+            <div *ngIf="guestForm.get('email').errors && (guestForm.get('email').touched || guestForm.get('email').dirty)">
+              <span *ngIf="guestForm.get('email').errors.pattern">Please enter a valid email.</span>
+            </div>
+          </mat-error>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <mat-form-field>
+            <mat-label>Invited By</mat-label>
+            <select matNativeControl formControlName="invitedById">
+              <option value="" selected></option>
+              <option *ngFor="let member of allMembers.data" value="{{member.id}}">{{member.firstName}} {{member.lastName}}</option>
+            </select>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-4 fixDivHeight">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </div>
+  <br>
+  <table class="table table-bordered table-striped table-hover table-sm">
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Age</th>
+      <th scope="col">Address</th>
+      <th scope="col">Mobile</th>
+      <th scope="col">Email</th>
+      <th scope="col">Invited By</th>
+      <th scope="col" colspan="2">Action</th>
     </tr>
-
+</thead>
+<tbody>
     <tr *ngFor="let guest of allGuests.data">
-      <td class="tbl2">{{guest.id}}</td>
-      <td class="tbl2">{{guest.firstName}} {{guest.lastName}}</td>
-      <td class="tbl2">{{guest.age}}</td>
-      <td class="tbl2">{{guest.address}}</td>
-      <td class="tbl2">{{guest.mobileNo}}</td>
-      <td class="tbl2">{{guest.email}}</td>
-      <td class="tbl2">{{guest.invitedBy.name}}</td>
-      <td class="tbl2">
-        <button type="button"
-        (click)="loadGuestToEdit(guest.id)">
+      <td>{{guest.id}}</td>
+      <td>{{guest.firstName}} {{guest.lastName}}</td>
+      <td>{{guest.age}}</td>
+      <td>{{guest.address}}</td>
+      <td>{{guest.mobileNo}}</td>
+      <td>{{guest.email}}</td>
+      <td>{{guest.invitedBy.name}}</td>
+      <td>
+        <button type="button" (click)="loadGuestToEdit(guest.id)" class="btn btn-info">
           Edit
         </button>
       </td>
-      <td class="tbl2">
-        <button type="button"
-        (click)="removeGuest(guest.id)">
+      <td>
+        <button type="button" (click)="removeGuest(guest.id)" class="btn btn-danger">
           Remove
         </button>
       </td>
     </tr>
+    </tbody>
   </table>
 </div>

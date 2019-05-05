@@ -7,6 +7,7 @@ import { GuestDto } from './guestDto';
 import { Guest } from './Guest';
 import { GuestResponseDto } from './guest-response-dto';
 import { MainResponseObject } from './main-response-object'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +17,7 @@ export class GuestService {
 
   constructor(private http: HttpClient) { }
 
-  getAllGuest(): Observable<GuestResponseDto[]> {
+  getAllGuests(): Observable<GuestResponseDto[]> {
    return this.http.get<GuestResponseDto[]>(this.url + '/getGuests');
   }
 

@@ -27,14 +27,17 @@
           </mat-error>
         </div>
         <div class="col-sm-4 fixDivHeight">
+          <!-- <mat-form-field>
+            <input matInput formControlName="birthDate" placeholder="BirthDate" autocomplete="off">
+          </mat-form-field> -->
+
           <mat-form-field>
-            <input matInput formControlName="age" placeholder="Age" autocomplete="off">
+            <input matInput [matDatepicker]="picker" formControlName="birthDate" placeholder="Birth date" autocomplete="off">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-error>
-            <div *ngIf="guestForm.get('age').errors && (guestForm.get('age').touched || guestForm.get('age').dirty)">
-              <span *ngIf="!guestForm.get('age').value">Please enter your age.</span>
-              <span *ngIf="guestForm.get('age').errors.pattern">Numbers only.</span>
-            </div>
+            <span *ngIf="!guestForm.get('birthDate').value && guestForm.get('birthDate').touched">Please enter your birthday.</span>
           </mat-error>
         </div>
         <div class="col-sm-4 fixDivHeight">
@@ -82,7 +85,7 @@
   </div>
   <br>
   <table class="table table-bordered table-striped table-hover table-sm">
-    <thead class="thead-light">
+    <thead>
     <tr>
       <th scope="col">ID</th>
       <th scope="col">Name</th>
@@ -90,28 +93,29 @@
       <th scope="col">Address</th>
       <th scope="col">Mobile</th>
       <th scope="col">Email</th>
-      <th scope="col">Invited By</th>
-      <th scope="col" colspan="2">Action</th>
+      <th scope="col" class="everythingOnOneLine">Invited By</th>
+      <th scope="col">Action</th>
     </tr>
 </thead>
 <tbody>
     <tr *ngFor="let guest of allGuests.data">
       <td>{{guest.id}}</td>
       <td>{{guest.firstName}} {{guest.lastName}}</td>
-      <td>{{guest.age}}</td>
+      <td>{{calculateAge(guest.birthDate)}}</td>
       <td>{{guest.address}}</td>
       <td>{{guest.mobileNo}}</td>
       <td>{{guest.email}}</td>
       <td>{{guest.invitedBy.name}}</td>
-      <td>
+      <td class="removeActionBorder">
+        <div class="everythingOnOneLine">
         <button type="button" (click)="loadGuestToEdit(guest.id)" class="btn btn-info">
           Edit
         </button>
-      </td>
-      <td>
+        &nbsp;
         <button type="button" (click)="removeGuest(guest.id)" class="btn btn-danger">
           Remove
         </button>
+        </div>
       </td>
     </tr>
     </tbody>

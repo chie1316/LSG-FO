@@ -1,4 +1,10 @@
 
+.everythingOnOneLine {
+ white-space: nowrap;
+}
+.btnCenter{
+  text-align: center;
+}
 
 .matCardHeader {
   background-color: #f2f2f2;

@@ -18,4 +18,8 @@ export class MemberService {
   getAllMembers(): Observable<MemberResponseDto[]> {
    return this.http.get<MemberResponseDto[]>(this.url + '/getMembers');
   }
+
+  getMemberId(memberId: string): Observable<MemberResponseDto> {
+     return this.http.get<MemberResponseDto>(this.url + '/getMemberDetailsById?id=' + memberId);
+   }
 }

@@ -3,7 +3,7 @@ export class Guest {
   "firstName":string;
   "middleName":string;
   "lastName":string;
-  "age":number;
+  "birthDate":string;
   "address":string;
   "mobileNo":string;
   "email":string;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Inject, LOCALE_ID, Pipe, PipeTransform} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -7,8 +7,10 @@ import { Guest } from '../guest';
 import { GuestDto } from '../guestDto';
 import { GuestResponseDto} from '../guest-response-dto'
 import { MemberResponseDto} from '../member-response-dto'
+import { FilterDto} from '../filter-dto'
 import { MainResponseObject} from '../main-response-object'
 import { MemberService} from '../member.service'
+import { DatePipe } from '@angular/common';
 
 @Component({
 selector: 'app-guest',
@@ -27,10 +29,12 @@ export class GuestComponent implements OnInit {
   guestIdUpdate = null;
   message = null;
   isSuccess = false;
+  today: number = Date.now();
   constructor(
     private formbulider: FormBuilder,
     private guestService: GuestService,
-    private memberService: MemberService) {}
+    private memberService: MemberService,
+    private datePipe: DatePipe) {}
 
 
   ngOnInit() {
@@ -38,7 +42,7 @@ export class GuestComponent implements OnInit {
       firstName: ['', [Validators.required]],
       middleName: '',
       lastName: ['', [Validators.required]],
-      age: ['', [Validators.required, Validators.pattern("[0-9]+")]],
+      birthDate: ['', [Validators.required]],
       address: ['', [Validators.required]],
       mobileNo: ['', [Validators.pattern("[0-9]+")]],
       email: ['', [Validators.pattern("[^ @]*@[^ @]*")]],
@@ -46,6 +50,10 @@ export class GuestComponent implements OnInit {
     });
     this.loadAllGuests();
     this.loadAllMembers();
+  }
+
+  dateToString(date: Date){
+    return this.datePipe.transform(date, 'dd/MM/yyyy');
   }
 
   loadAllGuests() {
@@ -72,11 +80,10 @@ export class GuestComponent implements OnInit {
   loadGuestToEdit(guestId: string) {
     this.guestService.getGuestId(guestId).subscribe(res => {
       this.guestIdUpdate = res.data.id;
-      console.log(res.data.firstName);
       this.guestForm.controls['firstName'].setValue(res.data.firstName);
       this.guestForm.controls['middleName'].setValue(res.data.middleName);
       this.guestForm.controls['lastName'].setValue(res.data.lastName);
-      this.guestForm.controls['age'].setValue(res.data.age);
+      this.guestForm.controls['birthDate'].setValue(new Date(res.data.birthDate));
       this.guestForm.controls['address'].setValue(res.data.address);
       this.guestForm.controls['mobileNo'].setValue(res.data.mobileNo);
       this.guestForm.controls['email'].setValue(res.data.email);
@@ -88,10 +95,10 @@ export class GuestComponent implements OnInit {
     if (this.btnReady === true) {
       this.btnReady = false;
       if (this.guestIdUpdate == null) {
+        guest.birthDate = this.dateToString(new Date(guest.birthDate));
         this.guestService.addGuest(guest).subscribe(
           res => {
             this.message = res.message;
-            console.log(this.message);
             if (res.code === 200) {
               this.dataSaved = true;
               this.loadAllGuests();
@@ -131,6 +138,16 @@ export class GuestComponent implements OnInit {
         }
       });
     }
+  }
+
+  calculateAge(birthDate: Date){
+      var birthday = new Date(birthDate).getTime();
+      var today = new Date().getTime();
+      var age = Math.floor((today - birthday) / (31557600000));
+      if (age < 0){
+        age = 0;
+      }
+      return age;
   }
 
   markFormPrestine(){

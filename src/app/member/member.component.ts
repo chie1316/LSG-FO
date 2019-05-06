@@ -15,21 +15,26 @@ export class MemberComponent implements OnInit {
   angular: any;
   responseObj: MainResponseObject;
   allMembers: MemberResponseDto[] = [];
-
-  constructor(private memberService: MemberService) { }
+  memberForm: any;
+  constructor(
+    private formbulider: FormBuilder,
+    private memberService: MemberService) { }
 
   ngOnInit() {
+    this.memberForm = this.formbulider.group({
+      firstName: ['', [Validators.required]],
+      middleName: '',
+      lastName: ['', [Validators.required]]
+    });
+    this.loadAllMembers();
   }
-
-  // loadAllMembers() {
-  //   const memberObservable = this.memberService.getAllMembers();
-  //   memberObservable.subscribe(res => {
-  //     this.allMembers = console.log(res);
-  //   });
-  // }
 
   loadAllMembers() {
     const memberObservable = this.memberService.getAllMembers();
-    memberObservable.subscribe(res => console.log(res));
+    memberObservable.subscribe(res => {
+      this.allMembers = res;
+    });
   }
+
+
 }

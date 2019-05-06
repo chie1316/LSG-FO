@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { GuestService } from './guest.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 import {
   MatButtonModule, MatMenuModule, MatDatepickerModule, MatNativeDateModule,
@@ -45,7 +46,7 @@ import { MemberComponent } from './member/member.component';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [HttpClientModule, GuestService, MatDatepickerModule],
+  providers: [HttpClientModule, GuestService, MatDatepickerModule, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

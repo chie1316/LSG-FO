@@ -1,3 +1,26 @@
-<p>
-  member works!
-</p>
+<div class="container">
+  <table class="table table-bordered table-striped table-hover table-sm">
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col" colspan="2">Action</th>
+    </tr>
+</thead>
+<tbody>
+    <tr *ngFor="let member of allMembers.data">
+      <td>{{member.id}}</td>
+      <td>{{member.firstName}} {{member.lastName}}</td>
+      <div class="everythingOnOneLine btnCenter">
+      <button type="button" (click)="loadGuestToEdit(guest.id)" class="btn btn-info btnMargin">
+        Edit
+      </button>
+      &nbsp;
+      <button type="button" (click)="removeGuest(guest.id)" class="btn btn-danger">
+        Remove
+      </button>
+      </div>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -2,6 +2,11 @@
 .everythingOnOneLine {
  white-space: nowrap;
 }
+
+#addMaginTop{
+  margin-top: 10px;
+}
+
 .btnCenter{
   text-align: center;
 }
@@ -26,6 +31,7 @@
 .matContent{
   margin-left: 10px;
   margin-right: 10px;
+  overflow: auto;
 }
 
 .fixDivHeight{

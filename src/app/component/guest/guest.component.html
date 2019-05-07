@@ -5,7 +5,7 @@
       <mat-card-title>Add Guest</mat-card-title>
     </mat-card-header>
     <mat-card-content class="matContent">
-      <form [formGroup]="guestForm" fxFlex="100" fxLayout="row" (ngSubmit)="onFormSubmit(guestForm.value)">
+      <form [formGroup]="guestForm" fxFlex="100" #projectForm='ngForm' fxLayout="row" (ngSubmit)="onFormSubmit(guestForm.value, projectForm)">
         <div class="col-sm-4 fixDivHeight">
           <mat-form-field>
             <input matInput formControlName="firstName" placeholder="First Name" autocomplete="off">
@@ -79,46 +79,71 @@
           </mat-form-field>
         </div>
         <div class="col-sm-4 fixDivHeight">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!projectForm.form.valid">Submit</button>
+          &nbsp;
+          <button type="reset" class="btn btn-warning">Clear</button>
         </div>
       </form>
     </mat-card-content>
   </div>
   <br>
-  <table class="table table-bordered table-striped table-hover table-sm">
-    <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Name</th>
-      <th scope="col">Age</th>
-      <th scope="col">Address</th>
-      <th scope="col">Mobile</th>
-      <th scope="col">Email</th>
-      <th scope="col" class="everythingOnOneLine">Invited By</th>
-      <th scope="col">Action</th>
-    </tr>
-</thead>
-<tbody>
-    <tr *ngFor="let guest of allGuests.data">
-      <td>{{guest.id}}</td>
-      <td>{{guest.firstName}} {{guest.lastName}}</td>
-      <td>{{calculateAge(guest.birthDate)}}</td>
-      <td>{{guest.address}}</td>
-      <td>{{guest.mobileNo}}</td>
-      <td>{{guest.email}}</td>
-      <td>{{guest.invitedBy.name}}</td>
-      <td class="removeActionBorder">
-        <div class="everythingOnOneLine">
-        <button type="button" (click)="loadGuestToEdit(guest.id)" class="btn btn-info">
-          Edit
-        </button>
-        &nbsp;
-        <button type="button" (click)="removeGuest(guest.id)" class="btn btn-danger">
-          Remove
-        </button>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="matCardContainer">
+    <mat-card-header class="matCardHeader">
+      <mat-card-title>Guests</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="matContent">
+      <form [formGroup]="guestListFilterForm" fxFlex="100" fxLayout="row" (ngSubmit)="onFilterSubmit(guestListFilterForm.value)">
+          <div class="col-sm-4 fixDivHeight">
+            <mat-form-field>
+              <mat-label>Page size</mat-label>
+              <select matNativeControl formControlName="limit" (change)="onFilterSubmit(guestListFilterForm.value)">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+              </select>
+            </mat-form-field>
+          </div>
+        <table class="table table-bordered table-striped table-hover table-sm">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Age</th>
+              <th scope="col">Address</th>
+              <th scope="col">Mobile</th>
+              <th scope="col">Email</th>
+              <th scope="col" class="everythingOnOneLine">Invited By</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let guest of allGuests.data">
+              <td>{{guest.id}}</td>
+              <td>{{guest.firstName}} {{guest.lastName}}</td>
+              <td>{{calculateAge(guest.birthDate)}}</td>
+              <td>{{guest.address}}</td>
+              <td>{{guest.mobileNo}}</td>
+              <td>{{guest.email}}</td>
+              <td>{{guest.invitedBy.name}}</td>
+              <td class="removeActionBorder">
+                <div class="everythingOnOneLine">
+                  <button type="button" (click)="loadGuestToEdit(guest.id)" class="btn btn-info">
+                    Edit
+                  </button>
+                  &nbsp;
+                  <button type="button" (click)="removeGuest(guest.id)" class="btn btn-danger">
+                    Remove
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </mat-card-content>
+  </div>
 </div>

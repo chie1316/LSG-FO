@@ -1,15 +1,15 @@
-import {Component, OnInit, Inject, LOCALE_ID, Pipe, PipeTransform} from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
+import { FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GuestService } from '@lsg/service-guest/guest.service';
 import { Guest } from '@lsg/model/guest';
 import { GuestDto } from '@lsg/dto/guest-dto';
-import { GuestResponseDto} from '@lsg/dto/guest-response-dto';
-import { MemberResponseDto} from '@lsg/dto/member-response-dto';
-import { FilterDto} from '@lsg/dto/filter-dto';
-import { MainResponseObjectDto} from '@lsg/dto/main-response-object-dto';
-import { MemberService} from '@lsg/service-member/member.service';
+import { GuestResponseDto } from '@lsg/dto/guest-response-dto';
+import { MemberResponseDto } from '@lsg/dto/member-response-dto';
+import { FilterDto, SortDto } from '@lsg/dto/filter-dto';
+import { MainResponseObjectDto } from '@lsg/dto/main-response-object-dto';
+import { MemberService } from '@lsg/service-member/member.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -22,6 +22,9 @@ export class GuestComponent implements OnInit {
   dataSaved = false;
   btnReady = true;
   guestForm: any;
+  guestListFilterForm: any;
+  guestListFilterDto: FilterDto;
+  guestSortDto: SortDto[] = [{sortOrder: 'desc', sortBy: 'createDate'}];
   allGuests: GuestResponseDto[] = [];
   allMembers: MemberResponseDto[] = [];
   responseObj: MainResponseObjectDto;
@@ -30,11 +33,14 @@ export class GuestComponent implements OnInit {
   isSuccess = false;
   today: number = Date.now();
   errorMsg;
+  page: number = 0;
+  pageSize: number = 10;
+
   constructor(
     private formbulider: FormBuilder,
     private guestService: GuestService,
     private memberService: MemberService,
-    private datePipe: DatePipe) {}
+    private datePipe: DatePipe) { }
 
 
   ngOnInit() {
@@ -48,16 +54,23 @@ export class GuestComponent implements OnInit {
       email: ['', [Validators.pattern("[^ @]*@[^ @]*")]],
       invitedById: ''
     });
-    this.loadAllGuests();
+
+    this.guestListFilterForm = this.formbulider.group({
+      page: this.page,
+      limit: this.pageSize,
+      sortList:[this.guestSortDto]
+    });
+    this.guestListFilterDto =this.guestListFilterForm.value;
+    this.loadAllGuests(this.guestListFilterDto);
     this.loadAllMembers();
   }
 
-  dateToString(date: Date){
+  dateToString(date: Date) {
     return this.datePipe.transform(date, 'dd/MM/yyyy');
   }
 
-  loadAllGuests() {
-    const guestsObservable = this.guestService.getAllGuests();
+  loadAllGuests(filter: FilterDto) {
+    const guestsObservable = this.guestService.getAllGuests(filter);
     guestsObservable.subscribe(
       res => this.allGuests = res,
       error => this.errorMsg = error
@@ -71,11 +84,19 @@ export class GuestComponent implements OnInit {
     });
   }
 
-  onFormSubmit() {
+test(){
+    console.log("Clicked");
+}
+  onFilterSubmit(){
+    const filterData = this.guestListFilterForm.value;
+    this.loadAllGuests(filterData);
+  }
+
+  onFormSubmit(newGuest, formDirective: any) {
     this.dataSaved = false;
-    const newGuest = this.guestForm.value;
     this.AddGuest(newGuest);
     this.guestIdUpdate = null;
+    formDirective.resetForm();
   }
 
   loadGuestToEdit(guestId: string) {
@@ -102,11 +123,11 @@ export class GuestComponent implements OnInit {
             this.message = res.message;
             if (res.code === 200) {
               this.dataSaved = true;
-              this.loadAllGuests();
+              this.loadAllGuests(this.guestListFilterForm.value);
               this.formReset();
               this.btnReady = true;
               this.isSuccess = true;
-            }else{
+            } else {
               this.btnReady = true;
               this.isSuccess = false;
             }
@@ -117,10 +138,10 @@ export class GuestComponent implements OnInit {
           this.message = res.message;
           if (res.code === 200) {
             this.dataSaved = true;
-            this.loadAllGuests();
+            this.loadAllGuests(this.guestListFilterForm.value);
             this.formReset();
             this.btnReady = true;
-          }else{
+          } else {
             this.btnReady = true;
           }
         });
@@ -134,25 +155,24 @@ export class GuestComponent implements OnInit {
         this.message = res.message;
         if (res.code === 200) {
           this.dataSaved = true;
-          this.loadAllGuests();
-          this.formReset();
+          this.loadAllGuests(this.guestListFilterForm.value);
         }
       });
     }
   }
 
-  calculateAge(birthDate: Date){
-      var birthday = new Date(birthDate).getTime();
-      var today = new Date().getTime();
-      var age = Math.floor((today - birthday) / (31557600000));
-      if (age < 0){
-        age = 0;
-      }
-      return age;
+  calculateAge(birthDate: Date) {
+    var birthday = new Date(birthDate).getTime();
+    var today = new Date().getTime();
+    var age = Math.floor((today - birthday) / (31557600000));
+    if (age < 0) {
+      age = 0;
+    }
+    return age;
   }
 
-  markFormPrestine(){
-    Object.keys(this.guestForm.controls).forEach(control =>{
+  markFormPrestine() {
+    Object.keys(this.guestForm.controls).forEach(control => {
       this.guestForm.controls[control].markAsPristine();
       this.guestForm.controls[control].markAsUntouched();
     });
@@ -161,6 +181,7 @@ export class GuestComponent implements OnInit {
   formReset() {
     this.markFormPrestine();
     this.guestForm.reset();
+    this.markFormPrestine();
     this.dataSaved = false;
   }
 

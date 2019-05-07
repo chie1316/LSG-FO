@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MemberService } from '../member.service';
-import { MemberResponseDto} from '../member-response-dto'
-import { MainResponseObject} from '../main-response-object'
+import { MemberService } from '@lsg/service-member/member.service';
+import { MemberResponseDto} from '@lsg/dto/member-response-dto'
+import { MainResponseObjectDto} from '@lsg/dto/main-response-object-dto';
 
 @Component({
   selector: 'app-member',
@@ -13,7 +13,7 @@ import { MainResponseObject} from '../main-response-object'
 })
 export class MemberComponent implements OnInit {
   angular: any;
-  responseObj: MainResponseObject;
+  responseObj: MainResponseObjectDto;
   allMembers: MemberResponseDto[] = [];
   memberForm: any;
   constructor(
@@ -35,6 +35,4 @@ export class MemberComponent implements OnInit {
       this.allMembers = res;
     });
   }
-
-
 }

@@ -2,22 +2,21 @@ import {Component, OnInit, Inject, LOCALE_ID, Pipe, PipeTransform} from '@angula
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GuestService } from '../guest.service';
-import { Guest } from '../guest';
-import { GuestDto } from '../guestDto';
-import { GuestResponseDto} from '../guest-response-dto'
-import { MemberResponseDto} from '../member-response-dto'
-import { FilterDto} from '../filter-dto'
-import { MainResponseObject} from '../main-response-object'
-import { MemberService} from '../member.service'
+import { GuestService } from '@lsg/service-guest/guest.service';
+import { Guest } from '@lsg/model/guest';
+import { GuestDto } from '@lsg/dto/guest-dto';
+import { GuestResponseDto} from '@lsg/dto/guest-response-dto';
+import { MemberResponseDto} from '@lsg/dto/member-response-dto';
+import { FilterDto} from '@lsg/dto/filter-dto';
+import { MainResponseObjectDto} from '@lsg/dto/main-response-object-dto';
+import { MemberService} from '@lsg/service-member/member.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
-selector: 'app-guest',
-templateUrl: './guest.component.html',
-styleUrls: ['./guest.component.css']
+  selector: 'app-guest',
+  templateUrl: './guest.component.html',
+  styleUrls: ['./guest.component.css']
 })
-
 export class GuestComponent implements OnInit {
   angular: any;
   dataSaved = false;
@@ -25,11 +24,12 @@ export class GuestComponent implements OnInit {
   guestForm: any;
   allGuests: GuestResponseDto[] = [];
   allMembers: MemberResponseDto[] = [];
-  responseObj: MainResponseObject;
+  responseObj: MainResponseObjectDto;
   guestIdUpdate = null;
   message = null;
   isSuccess = false;
   today: number = Date.now();
+  errorMsg;
   constructor(
     private formbulider: FormBuilder,
     private guestService: GuestService,
@@ -58,9 +58,10 @@ export class GuestComponent implements OnInit {
 
   loadAllGuests() {
     const guestsObservable = this.guestService.getAllGuests();
-    guestsObservable.subscribe(res => {
-      this.allGuests = res;
-    });
+    guestsObservable.subscribe(
+      res => this.allGuests = res,
+      error => this.errorMsg = error
+    );
   }
 
   loadAllMembers() {
@@ -94,8 +95,8 @@ export class GuestComponent implements OnInit {
   AddGuest(guest: GuestDto) {
     if (this.btnReady === true) {
       this.btnReady = false;
+      guest.birthDate = this.dateToString(new Date(guest.birthDate));
       if (this.guestIdUpdate == null) {
-        guest.birthDate = this.dateToString(new Date(guest.birthDate));
         this.guestService.addGuest(guest).subscribe(
           res => {
             this.message = res.message;

@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MemberResponseDto } from './member-response-dto';
-import { MainResponseObject } from './main-response-object'
+import { MemberResponseDto } from '@lsg/dto/member-response-dto';
 
 @Injectable({
   providedIn: 'root'

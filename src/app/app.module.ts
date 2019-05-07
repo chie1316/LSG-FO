@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { GuestService } from './guest.service';
+import { GuestService } from '@lsg/service-guest/guest.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -16,8 +16,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GuestComponent } from './guest/guest.component';
-import { MemberComponent } from './member/member.component';
+import { GuestComponent } from '@lsg/component-guest/guest.component';
+import { MemberComponent } from '@lsg/component-member/member.component';
 
 @NgModule({
   declarations: [

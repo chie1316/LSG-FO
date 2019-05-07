@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -17,6 +17,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@lsg/dto/*": ["app/dto/*"],
+      "@lsg/model/*": ["app/model/*"],
+      "@lsg/service-guest/*": ["app/service/guest/*"],
+      "@lsg/service-member/*": ["app/service/member/*"],
+      "@lsg/component-guest/*": ["app/component/guest/*"],
+      "@lsg/component-member/*": ["app/component/member/*"]
+
+    }
   }
 }

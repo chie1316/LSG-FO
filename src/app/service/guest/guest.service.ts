@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { GuestDto } from './guestDto';
-import { Guest } from './Guest';
-import { GuestResponseDto } from './guest-response-dto';
-import { MainResponseObject } from './main-response-object'
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable} from 'rxjs';
+import { GuestDto } from '@lsg/dto/guest-dto';
+import { Guest } from '@lsg/model/guest';
+import { GuestResponseDto } from '@lsg/dto/guest-response-dto';
+import { MainResponseObjectDto } from '@lsg/dto/main-response-object-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -20,20 +18,19 @@ export class GuestService {
   getAllGuests(): Observable<GuestResponseDto[]> {
    return this.http.get<GuestResponseDto[]>(this.url + '/getGuests');
   }
-
   getGuestId(guestId: string): Observable<GuestResponseDto> {
      return this.http.get<GuestResponseDto>(this.url + '/getGuestDetailsById?id=' + guestId);
    }
 
-  addGuest(newGuest: GuestDto): Observable<MainResponseObject> {
+  addGuest(newGuest: GuestDto): Observable<MainResponseObjectDto> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
-    return this.http.post<MainResponseObject>(this.url + '/addGuest',
+    return this.http.post<MainResponseObjectDto>(this.url + '/addGuest',
     newGuest, httpOptions);
   }
 
-  updateGuest(guest: GuestDto): Observable<MainResponseObject> {
+  updateGuest(guest: GuestDto): Observable<MainResponseObjectDto> {
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
-    return this.http.put<MainResponseObject>(this.url + '/updateGuest',
+    return this.http.put<MainResponseObjectDto>(this.url + '/updateGuest',
     guest, httpOptions);
   }
 

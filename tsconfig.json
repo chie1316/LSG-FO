@@ -24,8 +24,8 @@
       "@lsg/service-guest/*": ["app/service/guest/*"],
       "@lsg/service-member/*": ["app/service/member/*"],
       "@lsg/component-guest/*": ["app/component/guest/*"],
-      "@lsg/component-member/*": ["app/component/member/*"]
-
+      "@lsg/component-member/*": ["app/component/member/*"],
+      "@lsg/interceptor/*": ["app/interceptor/*"]
     }
   }
 }

@@ -5,7 +5,7 @@ export interface GuestResponseDto {
   "data": Data;
 }
 
- interface Data{
+ export interface Data{
   "id": string;
   "firstName": string;
   "middleName": string;

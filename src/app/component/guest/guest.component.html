@@ -1,5 +1,7 @@
 <div class="container">
-  <h3>{{errorMsg}}</h3>
+
+  <div #msgContainer></div>
+
   <div class="matCardContainer">
     <mat-card-header class="matCardHeader">
       <mat-card-title>Add Guest</mat-card-title>
@@ -78,10 +80,11 @@
             </select>
           </mat-form-field>
         </div>
-        <div class="col-sm-4 fixDivHeight">
-          <button type="submit" class="btn btn-primary" [disabled]="!projectForm.form.valid">Submit</button>
+        <div class="col-sm-4">
+          <button type="submit" class="btn btn-primary">Submit</button>
           &nbsp;
-          <button type="reset" class="btn btn-warning">Clear</button>
+          <button type="reset" class="btn btn-warning" (click)="onFormReset(projectForm)">Clear</button>
+          <pre class = "redText">{{addGuestMessage}}</pre>
         </div>
       </form>
     </mat-card-content>

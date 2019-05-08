@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { GuestService } from '@lsg/service-guest/guest.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 
 import {
@@ -17,6 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GuestComponent } from '@lsg/component-guest/guest.component';
 import { MemberComponent } from '@lsg/component-member/member.component';
+import { MyInterceptor } from '@lsg/interceptor/my-interceptor';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,13 @@ import { MemberComponent } from '@lsg/component-member/member.component';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [HttpClientModule, GuestService, MatDatepickerModule, DatePipe],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [HttpClientModule, GuestService, MatDatepickerModule, DatePipe,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MyInterceptor,
+      multi: true
+    }
+  ]
 })
 export class AppModule { }

@@ -11,6 +11,12 @@
   text-align: center;
 }
 
+.redText{
+  color:#f44336;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+}
+
 .matCardHeader {
   background-color: #f2f2f2;
   padding: 10px;
@@ -31,7 +37,8 @@
 .matContent{
   margin-left: 10px;
   margin-right: 10px;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .fixDivHeight{
